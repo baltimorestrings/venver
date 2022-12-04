@@ -1,6 +1,6 @@
 # What Is This
 
-##### Description
+### Intro
 
 This is a simple script that uses pip and python installed on the system to ease wiping and recreating a venv.
 
@@ -11,18 +11,6 @@ It also expects "src" style directory
 It will install your package with the setup.cfg extras header "test", but others can be specified in setup.cfg.
 
 If anyone besides me uses this and wants it, the default can easily shift to "no extras"
-
-##### What it Will Do:
-
-- Clear all `__pycache__` folders in src folder.
-- Make a venv with the provided name/location and python type
-- If not given a type, will default to python3.6
-- If not given a location, will default to v{number} in repo root
-- Install "test" and any other extras it sees in optional "venver" section of setup.cfg
-
----
-
-### Specifying Python version
 
 ##### Help Mode
 
@@ -48,6 +36,19 @@ optional arguments:
                     venv will use .pth files in site-packages, and the actual
                     source repo files will be used
 ```
+
+
+##### What it Will Do:
+
+- Clear all `__pycache__` folders in src folder.
+- Make a venv with the provided name/location and python type
+- If not given a type, will default to python3.6
+- If not given a location, will default to v{number} in repo root
+- Install "test" and any other extras it sees in optional "venver" section of setup.cfg
+
+---
+
+### Specifying Python version
 
 ##### Edit Mode
 
