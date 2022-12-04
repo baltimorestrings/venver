@@ -136,7 +136,8 @@ def _run_pass_output(cmd: str):
 def setup_and_process_args() -> Namespace:
     """CLI processing"""
     argparser = ArgumentParserDisplayHelpOnError(
-        prog=__file__, description="A simple venv utility to rapidly reset repo venvs"
+        prog=Path(__file__).name,
+        description="A simple venv utility to rapidly reset repo venvs"
     )
     argparser.add_argument(
         "python_version",
