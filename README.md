@@ -87,13 +87,13 @@ Running without arguments will make a v3.6 venv in a folder called "v6" at repo 
 
 ##### Ex: Running With No Arguments
 ```bash
-[localhost] pb_python (main *+%=)> venver
-VENVER: Repo root: '/Users/bemore/zcode/me/pb_python'
-VENVER: Will be making a venv with '/python3.6' at 'v6'
-VENVER: checking and clearing pycaches: done
+[localhost]:some_repo (master *=)> venver
+VENVER: checking and clearing pycaches: ..............................................done
+VENVER: Repo root: '/Users/bemore/zcode/some_repo'
+VENVER: Will be using'/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6' to make venv at'v6'
 VEVNER: running `python3.6 -m venv v6`
-VEVNER: running `python3.6 -m pip install --upgrade pip`
-VEVNER: running `python3.6 -m pip install  /Users/bemore/zcode/me/pb_python[test]``
+VEVNER: running `v6/bin/python3 -m pip install --upgrade pip`
+VEVNER: running `v6/bin/python3 -m pip install  /Users/bemore/zcode/panoptes/panoptes_framework[test]
 ```
 
 
@@ -120,8 +120,8 @@ VENVER: Will be making a venv with '/usr/local/bin/python3.8' at 'v8'
 VENVER: checking and clearing pycaches: ....done
 VENVER: Found existing venv at destination directory, will delete... done.
 VEVNER: running `/usr/local/bin/python3.8 -m venv v8`
-VEVNER: running `/usr/local/bin/python3.8 -m pip install --upgrade pip`
-VEVNER: running `/usr/local/bin/python3.8 -m pip install  /Users/bemore/zcode/me/pb_python[test]`
+VEVNER: running `v8/bin/python3.8 -m pip install --upgrade pip`
+VEVNER: running `v8/bin/python3.8 -m pip install  /Users/bemore/zcode/me/pb_python[test]`
 ```
 
 All four of those will do the same thing
@@ -143,7 +143,7 @@ VENVER: Will be making a venv with '/usr/local/bin/python3.8' at '../venv'
 VENVER: checking and clearing pycaches: done
 VENVER: Found existing venv at destination directory, will delete... done.
 VEVNER: running `/usr/local/bin/python3.8 -m venv ../venv`
-VEVNER: running `/usr/local/bin/python3.8 -m pip install  /Users/bemore/plugins_official[core_open_source,test]`
+VEVNER: running `../venv/bin/python3.8 -m pip install  /Users/bemore/plugins_official[core_open_source,test]`
 ```
 
 this one just wants a different venv name:
