@@ -113,3 +113,23 @@ plugins_official> venver 3.8 virtual_environment_folder
 ```
 
 you get the idea
+
+----
+
+## Why Isnt This on PyPI / Doesn't it Support Poetry / Can you Add X
+
+This is a script, not a program. It's written like one and it works like one. 
+
+It is designed to be run directly, or via `curl <raw.github path to venver.py> | python3 - ` in a little wrapper.
+
+It does not aim to wrap or obfuscate or add to the basic setuptools venv capability, there are far too
+many of those already (see: XKDC, protocols). It is just a convenience script that works solely with 
+pip's capabilities .
+
+I'd be happy to add X if anyone ever actually wants, with the single precondition:
+
+**As long as it can be added without interfering with the simple, no-arg functionality**
+
+If it complies, I'm literally always happy to do so. This is mostly up because I'm doing on public git 
+what I do at work, publishing the random things I use so that I can use them, but also practicing my markdown,
+which is why this tiny script is way too explained.
