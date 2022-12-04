@@ -126,7 +126,7 @@ It does not aim to wrap or obfuscate or add to the basic setuptools venv capabil
 many of those already (see: below). It is just a convenience script that works solely with 
 pip's capabilities .
 
-<img src="https://imgs.xkcd.com/comics/standards.png" height=50></img>
+<img src="https://imgs.xkcd.com/comics/standards.png" height=200></img>
 
 I'd be happy to add X if anyone ever actually wants, with the single precondition:
 
