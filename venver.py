@@ -31,7 +31,7 @@ from pathlib import Path
 REPO_DEFINING_FILENAMES = ["setup.cfg", "src"]
 """For now, this only works on src style repos. """
 
-SUPPORTED_PYTHON_VERSIONS = ["6", "8", "11"]
+SUPPORTED_PYTHON_VERSIONS = ["6", "8", "10", "11"]
 """ I only need these 3"""
 
 DEFAULT_EXTRAS = ["test"]
