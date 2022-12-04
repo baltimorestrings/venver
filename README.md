@@ -126,9 +126,9 @@ It does not aim to wrap or obfuscate or add to the basic setuptools venv capabil
 many of those already (see: below). It is just a convenience script that works solely with 
 pip's capabilities .
 
-<center>
-<img src="https://imgs.xkcd.com/comics/standards.png" height=150 alt="XKDC: Standards" style="float:center"></img>
-</center>
+<p align="center" width="100%">
+<img src="https://imgs.xkcd.com/comics/standards.png" height=150 alt="XKDC: Standards"></img>
+</p>
 
 I'd be happy to add X if anyone ever actually wants, with the single precondition:
 
