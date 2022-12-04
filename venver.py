@@ -39,7 +39,7 @@ DEFAULT_EXTRAS = ["test"]
 
 
 def main():
-    """Script entry point, just calls smaller task functions """
+    """Script entry point, just calls smaller task functions"""
     args = setup_and_process_args()
     try:
         # traverse up folders until we find a repo root
@@ -79,12 +79,13 @@ def main():
         _die(f"VENVER: {type(e).__name__} encountered:  \n{e}")
 
 
-def _venv_build(py_cmd: Path,
-                venv_location: Path,
-                repo_root: Path,
-                pip_extras: List[str],
-                edit_flag: bool
-                ):
+def _venv_build(
+    py_cmd: Path,
+    venv_location: Path,
+    repo_root: Path,
+    pip_extras: List[str],
+    edit_flag: bool,
+):
     """Actually builds the venv
 
     Args:
@@ -104,7 +105,9 @@ def _venv_build(py_cmd: Path,
     if extra_packages:
         extras_phrase = "[" + ",".join(extra_packages) + "]"
 
-    install_package_cmd = f"{py_cmd} -m pip install {edit_flag} {repo_root}{extras_phrase}"
+    install_package_cmd = (
+        f"{py_cmd} -m pip install {edit_flag} {repo_root}{extras_phrase}"
+    )
 
     print(f"VEVNER: running `{venv_create_cmd}`")
     _run_pass_output(venv_create_cmd)
@@ -115,8 +118,9 @@ def _venv_build(py_cmd: Path,
     print(f"VEVNER: running `{install_package_cmd}`")
     _run_pass_output(install_package_cmd)
 
+
 def _run_silent(cmd: str):
-    """Runs provided string in bash silently with a 2>&1 (captures stderr as stdout), returns text """
+    """Runs provided string in bash silently with a 2>&1 (captures stderr as stdout), returns text"""
     return run(cmd.split(), stderr=STDOUT, stdout=PIPE).stdout.decode()
 
 
@@ -127,10 +131,36 @@ def _run_pass_output(cmd: str):
 
 def setup_and_process_args() -> Namespace:
     """CLI processing"""
-    argparser = ArgumentParser()
-    argparser.add_argument("python_version", nargs="?", default="3.6")
-    argparser.add_argument("venv_destination", nargs="?")
-    argparser.add_argument("--edit", "-E", "-e", action="store_true")
+    argparser = ArgumentParser(
+        prog=__file__, description="A simple venv utility to rapidly reset repo venvs"
+    )
+    argparser.add_argument(
+        "python_version",
+        nargs="?",
+        default="3.6",
+        help=(
+            "Python version: defaults to 3.6. Can be specified a few different ways including:"
+            "py36, 3.6, 6, 8, python311, py3.8, etc"
+        ),
+    )
+    argparser.add_argument(
+        "venv_destination",
+        nargs="?",
+        help=(
+            "Where to make the venv. If not supplied, will make a venv in the repo root"
+            " called v#, where # is the minor version number (3, 8, 11)"
+        ),
+    )
+    argparser.add_argument(
+        "--edit",
+        "-E",
+        "-e",
+        action="store_true",
+        help=(
+            "If enabled, pip install --edit will be used (the installed venv will use .pth"
+            " files in site-packages, and the actual source repo files will be used"
+        ),
+    )
     args = argparser.parse_args()
     return args
 
@@ -141,8 +171,7 @@ def _get_repo_root() -> Path:
     Raises:
         OSError if it runs out of "up" to recurse through
     """
-        
-        
+
     current_location = Path.cwd().expanduser().resolve()
     directory_cursor = current_location
 
@@ -157,7 +186,7 @@ def _get_repo_root() -> Path:
 
 
 def _sanitize_python_name(ver: str):
-    """Turns all versions of python3 names down to just the non 3. 
+    """Turns all versions of python3 names down to just the non 3.
 
     Currently don't support sub-versions because I don't need to, but can be added
     """
@@ -165,7 +194,7 @@ def _sanitize_python_name(ver: str):
 
 
 def is_repo_root(path: Path) -> bool:
-    """Check if provided Path is a repo root """
+    """Check if provided Path is a repo root"""
     if all(len(list(path.glob(filename))) >= 1 for filename in REPO_DEFINING_FILENAMES):
         return True
     return False
@@ -198,7 +227,7 @@ def _get_python_executable(ver: str):
 
 
 def _clear_caches(repo_root: Path):
-    """Just a simple `find $REPO_ROOT/src -name "__pycache__" --type d -delete`, but in python """
+    """Just a simple `find $REPO_ROOT/src -name "__pycache__" --type d -delete`, but in python"""
     print("VENVER: checking and clearing pycaches: ", end="")
     caches = list(repo_root.glob("src/**/__pycache__"))
     for file in caches:
@@ -208,7 +237,7 @@ def _clear_caches(repo_root: Path):
 
 
 def _check_and_clear_existing_venv(venv_location: Path):
-    """If it sees a folder at venv_location, deletes it """
+    """If it sees a folder at venv_location, deletes it"""
     if venv_location.exists() and venv_location.is_dir():
         print(
             f"VENVER: Found existing venv at destination directory, will delete...",
@@ -219,7 +248,7 @@ def _check_and_clear_existing_venv(venv_location: Path):
 
 
 def _process_setup_cfg(repo_root: Path) -> Path:
-    """Look in repo_root/setup.cfg for a section "venver" with key "extras", returns list """
+    """Look in repo_root/setup.cfg for a section "venver" with key "extras", returns list"""
     extras = []
     cfg = ConfigParser()
     with open(str(repo_root / "setup.cfg"), "r") as setup_cfg:
@@ -232,7 +261,6 @@ def _process_setup_cfg(repo_root: Path) -> Path:
         # no config specified
         pass
     return extras
-
 
 
 def _die(msg: str):
