@@ -18,6 +18,8 @@ It will:
 - If not given a location, will default to v{number} in repo root
 - Install "test" and any other extras it sees in optional "venver" section of setup.cfg
 
+---
+
 ### Specifying Python version
 
 venver will search the environment for the right executable to make the venv with. 
@@ -28,15 +30,14 @@ once the venv is created with the right version, it doesn't matter what python m
 expects the executable to be supplied and will alarm if it doesn't see one:
 
 ```bash
-[C02X61CYJHD3]:new_tests (src_structure %=)> venver 3.10
+new_tests (src_structure %=)> venver 3.10
 Failed. VENVER: OSError encountered:
 Couldn't find a suitable executable for python3.10 to make a venv with
-[C02X61CYJHD3]:new_tests (src_structure %=)> venver 10
+new_tests (src_structure %=)> venver 10
 Failed. VENVER: OSError encountered:
 Couldn't find a suitable executable for python3.10 to make a venv with
 ```
 
-----
 
 Running without arguments will make a v3.6 venv in a folder called "v6" at repo base:
 
