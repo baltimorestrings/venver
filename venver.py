@@ -131,7 +131,7 @@ def _run_pass_output(cmd: str):
 
 def setup_and_process_args() -> Namespace:
     """CLI processing"""
-    argparser = ArgumentParser(
+    argparser = ArgumentParserDisplayHelpOnError(
         prog=__file__, description="A simple venv utility to rapidly reset repo venvs"
     )
     argparser.add_argument(
@@ -270,6 +270,15 @@ def _process_setup_cfg(repo_root: Path) -> Path:
 def _die(msg: str):
     print(f"Failed. {msg}")
     sys.exit(1)
+
+
+class ArgumentParserDisplayHelpOnError(ArgumentParser):
+    """Convenience class, will display the full help if it encounters an error """
+    def error(self, message: str) -> str:
+        line = ("-" * 50) + "\n"
+        sys.stderr.write(f"{line}Error: {message}\n{line}")
+        self.print_help()
+        sys.exit(1)
 
 
 if __name__ == "__main__":
