@@ -90,7 +90,7 @@ All four of those will do the same thing
 
 ### Specifying Venv location
 
-##### How to create venvs not at root
+##### How to Create Venvs not at Root
 In this one, I specify I want a venv one folder above the source repo. 
 
 You can see I've specified the extra `core_open_source` in my setup.cfg
