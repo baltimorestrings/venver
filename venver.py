@@ -1,4 +1,25 @@
 #!/usr/bin/env python3
+"""
+The venver.
+
+This script is meant to be run in a venv and optionally provided with a python version and a venv location
+
+It pretty much does what tox does, for anyone like me that works out of --edit mode and likes running tests manually.
+
+Run it with --help for a full argument explanation.
+
+This is something I found myself doing relatively often, so it is opinionated and it just kinda does stuff.
+
+It expects a "src" driven source directory - which is good for a bunch of reasons, but if anyone ever wants to use this who doesn't like that,
+it's easy enough to add a flag and expose a setup.cfg directive, just ask.
+
+Things it does:
+    1) Recurses up from wherever it is called and finds the repo root
+    2) Clears all __pycache__ folders in the actual source - this can be helpful when pip --edit caches get stuck in a few different wheel building situations
+    3) Deletes any venv it finds at the provided or default location
+    4) Makes a venv, upgrades pip, installs repo in venv with extra [test]
+    5) Also installs any other extras it finds by looking in setup.cfg section "venver", key "extras" - expects a comma separated list
+"""
 import sys
 from typing import List
 from configparser import ConfigParser
@@ -8,16 +29,17 @@ from shutil import rmtree
 from pathlib import Path
 
 REPO_DEFINING_FILENAMES = ["setup.cfg", "src"]
-"""For safety, this only works on src style repos. """
+"""For now, this only works on src style repos. """
 
 SUPPORTED_PYTHON_VERSIONS = ["6", "8", "11"]
-""" for now """
+""" I only need these 3"""
 
 DEFAULT_EXTRAS = ["test"]
-""" This script is designed to be "drop in and edit", hence the globals. extras may also be added in setup.cfg 'venver':'extras' """
+""" pip install blah[test] - installs testing requirements """
 
 
 def main():
+    """Script entry point, just calls smaller task functions """
     args = setup_and_process_args()
     try:
         # traverse up folders until we find a repo root
@@ -57,109 +79,21 @@ def main():
         _die(f"VENVER: {type(e).__name__} encountered:  \n{e}")
 
 
-def _run_silent(cmd: str):
-    return run(cmd.split(), stderr=STDOUT, stdout=PIPE).stdout.decode()
-
-
-def _run_pass_output(cmd: str):
-    return run(cmd.split())
-
-
-def setup_and_process_args() -> Namespace:
-    argparser = ArgumentParser()
-    argparser.add_argument("python_version", nargs="?", default="3.6")
-    argparser.add_argument("venv_destination", nargs="?")
-    argparser.add_argument("--edit", "-E", "-e", action="store_true")
-    args = argparser.parse_args()
-    return args
-
-
-def _get_repo_root() -> Path:
-    current_location = Path.cwd().expanduser().resolve()
-    directory_cursor = current_location
-
-    while not is_repo_root(directory_cursor) and str(directory_cursor) != "/":
-        directory_cursor = directory_cursor.parent
-
-    if str(directory_cursor) == "/":
-        raise OSError(
-            f"Couldn't find a repo at or above current location ({current_location}. Script must be run from within a repo"
-        )
-    return directory_cursor
-
-
-def _sanitize_python_name(ver: str):
-    return ver.strip("python").strip("py").strip("3").replace(".", "")
-
-
-def is_repo_root(path: Path):
-    if all(len(list(path.glob(filename))) >= 1 for filename in REPO_DEFINING_FILENAMES):
-        return True
-    return False
-
-
-def _get_python_executable(ver: str):
-
-    sanitized_ver = _sanitize_python_name(ver)
-
-    if sanitized_ver not in SUPPORTED_PYTHON_VERSIONS:
-        raise ValueError(f"Couldn't get supported python version out of '{ver}'")
-
-    py_exec_name = "python3." + sanitized_ver
-
-    try_full_name = _run_silent("which " + py_exec_name).strip()
-
-    if try_full_name:
-        return Path(try_full_name)
-    else:
-        try_backup = _run_silent("python3 --version").strip()
-        if "3.{sanitized_ver}" in try_backup:
-            return Path(try_backup)
-    raise OSError(
-        f"Couldn't find a suitable executable for {py_exec_name} to make a venv with"
-    )
-
-
-def _clear_caches(repo_root: Path):
-    print("VENVER: checking and clearing pycaches: ", end="")
-    caches = list(repo_root.glob("src/**/__pycache__"))
-    for file in caches:
-        print(".", end="")
-        rmtree(file)
-    print("done")
-
-
-def _check_and_clear_existing_venv(venv_location: Path):
-    if venv_location.exists() and venv_location.is_dir():
-        print(
-            f"VENVER: Found existing venv at destination directory, will delete...",
-            end="",
-        )
-        rmtree(venv_location)
-        print(" done.")
-
-
-def _process_setup_cfg(repo_root: Path) -> Path:
-    extras = []
-    cfg = ConfigParser()
-    with open(str(repo_root / "setup.cfg"), "r") as setup_cfg:
-        cfg.read_file(setup_cfg)
-
-    try:
-        extras += cfg["venver"]["extras"].split(",")
-
-    except KeyError:
-        # no config specified
-        pass
-    return extras
-
-
 def _venv_build(py_cmd: Path,
                 venv_location: Path,
                 repo_root: Path,
                 pip_extras: List[str],
                 edit_flag: bool
                 ):
+    """Actually builds the venv
+
+    Args:
+        py_cmd (Path): full path to a python executable we'll call to create venv
+        venv_location (Path): full path to where new venv should go
+        repo_root (Path): full path to the repo folder to install from
+        pip_extras (List[str]): array of pip extras to supply to the pip install step (pip install <package>[test,etc])
+        edit_flag (bool): if enabled, pip will install in --edit mode (site-packages gets a .pth file to redirect to the actual source folder)
+    """
     venv_create_cmd = f"{py_cmd} -m venv {venv_location}"
     pip_upgrade_cmd = f"{py_cmd} -m pip install --upgrade pip"
 
@@ -180,6 +114,125 @@ def _venv_build(py_cmd: Path,
 
     print(f"VEVNER: running `{install_package_cmd}`")
     _run_pass_output(install_package_cmd)
+
+def _run_silent(cmd: str):
+    """Runs provided string in bash silently with a 2>&1 (captures stderr as stdout), returns text """
+    return run(cmd.split(), stderr=STDOUT, stdout=PIPE).stdout.decode()
+
+
+def _run_pass_output(cmd: str):
+    """Just runs cmd and lets output print"""
+    return run(cmd.split())
+
+
+def setup_and_process_args() -> Namespace:
+    """CLI processing"""
+    argparser = ArgumentParser()
+    argparser.add_argument("python_version", nargs="?", default="3.6")
+    argparser.add_argument("venv_destination", nargs="?")
+    argparser.add_argument("--edit", "-E", "-e", action="store_true")
+    args = argparser.parse_args()
+    return args
+
+
+def _get_repo_root() -> Path:
+    """Recurse up from working directory if needed until we're in a repo root, returns Path of such
+
+    Raises:
+        OSError if it runs out of "up" to recurse through
+    """
+        
+        
+    current_location = Path.cwd().expanduser().resolve()
+    directory_cursor = current_location
+
+    while not is_repo_root(directory_cursor) and str(directory_cursor) != "/":
+        directory_cursor = directory_cursor.parent
+
+    if str(directory_cursor) == "/":
+        raise OSError(
+            f"Couldn't find a repo at or above current location ({current_location}. Script must be run from within a repo"
+        )
+    return directory_cursor
+
+
+def _sanitize_python_name(ver: str):
+    """Turns all versions of python3 names down to just the non 3. 
+
+    Currently don't support sub-versions because I don't need to, but can be added
+    """
+    return ver.strip("python").strip("py").strip("3").replace(".", "")
+
+
+def is_repo_root(path: Path) -> bool:
+    """Check if provided Path is a repo root """
+    if all(len(list(path.glob(filename))) >= 1 for filename in REPO_DEFINING_FILENAMES):
+        return True
+    return False
+
+
+def _get_python_executable(ver: str):
+    sanitized_ver = _sanitize_python_name(ver)
+    """Tries its best to get a python executable for a string.
+
+    Understands:
+        'python38', 'py38', '38', '8', '3', 'py36', etc
+    """
+
+    if sanitized_ver not in SUPPORTED_PYTHON_VERSIONS:
+        raise ValueError(f"Couldn't get supported python version out of '{ver}'")
+
+    py_exec_name = "python3." + sanitized_ver
+
+    try_full_name = _run_silent("which " + py_exec_name).strip()
+
+    if try_full_name:
+        return Path(try_full_name)
+    else:
+        try_backup = _run_silent("python3 --version").strip()
+        if "3.{sanitized_ver}" in try_backup:
+            return Path(try_backup)
+    raise OSError(
+        f"Couldn't find a suitable executable for {py_exec_name} to make a venv with"
+    )
+
+
+def _clear_caches(repo_root: Path):
+    """Just a simple `find $REPO_ROOT/src -name "__pycache__" --type d -delete`, but in python """
+    print("VENVER: checking and clearing pycaches: ", end="")
+    caches = list(repo_root.glob("src/**/__pycache__"))
+    for file in caches:
+        print(".", end="")
+        rmtree(file)
+    print("done")
+
+
+def _check_and_clear_existing_venv(venv_location: Path):
+    """If it sees a folder at venv_location, deletes it """
+    if venv_location.exists() and venv_location.is_dir():
+        print(
+            f"VENVER: Found existing venv at destination directory, will delete...",
+            end="",
+        )
+        rmtree(venv_location)
+        print(" done.")
+
+
+def _process_setup_cfg(repo_root: Path) -> Path:
+    """Look in repo_root/setup.cfg for a section "venver" with key "extras", returns list """
+    extras = []
+    cfg = ConfigParser()
+    with open(str(repo_root / "setup.cfg"), "r") as setup_cfg:
+        cfg.read_file(setup_cfg)
+
+    try:
+        extras += cfg["venver"]["extras"].split(",")
+
+    except KeyError:
+        # no config specified
+        pass
+    return extras
+
 
 
 def _die(msg: str):
