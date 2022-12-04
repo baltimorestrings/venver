@@ -54,11 +54,12 @@ def main():
             venv_location = f"v{_sanitize_python_name(py_cmd.name)}"
         venv_location = Path(venv_location)
 
-        print(f"VENVER: Repo root: '{repo_root}'")
-        print(f"VENVER: Will be making a venv with '{py_cmd}' at '{venv_location}'")
-
         # clear pycaches in reporoot/src
         _clear_caches(repo_root)
+
+
+        print(f"VENVER: Repo root: '{repo_root}'")
+        print(f"VENVER: Will be using'{py_cmd}' to make venv at'{venv_location}'")
 
         # delete anything that already exists at the future venv loation
         _check_and_clear_existing_venv(venv_location)
@@ -97,8 +98,9 @@ def _venv_build(
     """
     venv_create_cmd = f"{py_cmd} -m venv {venv_location}"
     venv_create_cmd_shortened = venv_create_cmd.replace(str(py_cmd), str(py_cmd.name))
-    pip_upgrade_cmd = f"{py_cmd} -m pip install --upgrade pip"
-    pip_upgrade_cmd_shortened = pip_upgrade_cmd.replace(str(py_cmd), str(py_cmd.name))
+
+    py_in_venv_cmd = Path(f"{venv_location}/bin/python3")
+    pip_upgrade_cmd = f"{py_in_venv_cmd} -m pip install --upgrade pip"
 
     # build our edit/pip submodule phrasing
     edit_flag = "  --edit  " if edit_flag else ""
@@ -108,17 +110,16 @@ def _venv_build(
         extras_phrase = "[" + ",".join(extra_packages) + "]"
 
     install_package_cmd = (
-        f"{py_cmd} -m pip install {edit_flag} {repo_root}{extras_phrase}"
+        f"{py_in_venv_cmd} -m pip install {edit_flag} {repo_root}{extras_phrase}"
     )
-    install_package_cmd_shortened = install_package_cmd.replace(str(py_cmd), str(py_cmd.name))
 
     print(f"VEVNER: running `{venv_create_cmd_shortened}`")
     _run_pass_output(venv_create_cmd)
 
-    print(f"VEVNER: running `{pip_upgrade_cmd_shortened}`")
+    print(f"VEVNER: running `{pip_upgrade_cmd}`")
     _run_silent(pip_upgrade_cmd)
 
-    print(f"VEVNER: running `{install_package_cmd_shortened}`")
+    print(f"VEVNER: running `{install_package_cmd}`")
     _run_pass_output(install_package_cmd)
 
 
@@ -242,16 +243,29 @@ def _clear_caches(repo_root: Path):
         rmtree(file)
     print("done")
 
+def _is_venv_dir(possible_venv_location: Path) -> bool:
+    """Accepts Path, returns "yes" if there's a bin/activate and a bin/python in it, IE it's a venv """
+    return all((
+            Path(possible_venv_location, "bin").is_dir(),
+            Path(possible_venv_location, "lib").is_dir(),
+            Path(possible_venv_location, "bin", "python").is_file(),
+            Path(possible_venv_location, "bin", "activate").is_file()
+    ))
 
 def _check_and_clear_existing_venv(venv_location: Path):
     """If it sees a folder at venv_location, deletes it"""
-    if venv_location.exists() and venv_location.is_dir():
-        print(
-            f"VENVER: Found existing venv at destination directory, will delete...",
-            end="",
-        )
-        rmtree(venv_location)
-        print(" done.")
+    if venv_location.exists():
+        if venv_location.is_dir() and _is_venv_dir(venv_location):
+            print(
+                f"VENVER: Found existing venv at destination directory, will delete...",
+                end="",
+            )
+            rmtree(venv_location)
+            print(" done.")
+        else:
+            raise OSError(f"Found an already existing file/folder at provided target '{venv_location}', and"
+                          " it doesn't look like a venv."
+            )
 
 
 def _process_setup_cfg(repo_root: Path) -> Path:
