@@ -12,6 +12,14 @@ It will install your package with the setup.cfg extras header "test", but others
 
 If anyone besides me uses this and wants it, the default can easily shift to "no extras"
 
+I use it like so:
+
+```bash
+curl -s https://raw.githubusercontent.com/baltimorestrings/venver/main/venver.py | python3 -
+```
+
+No need to install, it's just a simple script I find useful and benefit from keeping simple (and not needing to re-pull every time I tweak.
+
 
 #### What it Will Do:
 
