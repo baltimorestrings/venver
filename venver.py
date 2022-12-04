@@ -123,8 +123,12 @@ def _venv_build(
     _run_pass_output(install_package_cmd)
 
 
-def _run_silent(cmd: str):
-    """Runs provided string in bash silently with a 2>&1 (captures stderr as stdout), returns text"""
+def _run_silent(cmd: str) -> str:
+    """Runs provided string in bash silently with a 2>&1 (captures stderr as stdout), returns text
+
+    Returns:
+        str - the output
+    """
     return run(cmd.split(), stderr=STDOUT, stdout=PIPE).stdout.decode()
 
 
@@ -173,6 +177,9 @@ def setup_and_process_args() -> Namespace:
 def _get_repo_root() -> Path:
     """Recurse up from working directory if needed until we're in a repo root, returns Path of such
 
+    Returns:
+        Path - the root of the repo
+
     Raises:
         OSError if it runs out of "up" to recurse through
     """
@@ -190,7 +197,7 @@ def _get_repo_root() -> Path:
     return directory_cursor
 
 
-def _sanitize_python_name(ver: str):
+def _sanitize_python_name(ver: str) -> str:
     """Turns all versions of python3 names down to just the non 3.
 
     Currently don't support sub-versions because I don't need to, but can be added
@@ -211,11 +218,18 @@ def is_repo_root(path: Path) -> bool:
     return False
 
 
-def _get_python_executable(ver: str):
+def _get_python_executable(ver: str) -> Path:
     """Tries its best to get a python executable for a string.
+
+    Returns:
+        Path - representing full path to valid python executable
+
+    Raises:
+        OSError - if it can't find a valid python
 
     Understands:
         'python38', 'py38', '38', '8', '3', 'py36', etc
+
     """
     # first, strip our input down to just the non 3 part, IE python3.8 becomes "8"
     sanitized_ver = _sanitize_python_name(ver)
@@ -276,7 +290,11 @@ def _check_and_clear_existing_venv(venv_location: Path):
 
 
 def _process_setup_cfg(repo_root: Path) -> Path:
-    """Look in repo_root/setup.cfg for a section "venver" with key "extras", returns list"""
+    """Look in repo_root/setup.cfg for a section "venver" with key "extras", returns list
+
+    Returns:
+        List[str] representing additional pip "extras" IE pip install <reponame>[extras]
+    """
     extras = []
     cfg = ConfigParser()
     with open(str(repo_root / "setup.cfg"), "r") as setup_cfg:
@@ -292,6 +310,7 @@ def _process_setup_cfg(repo_root: Path) -> Path:
 
 
 def _die(msg: str):
+    """Dead"""
     print(f"Failed. {msg}")
     sys.exit(1)
 
