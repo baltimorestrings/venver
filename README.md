@@ -1,4 +1,6 @@
-# What is this
+# What Is This
+
+##### Description
 
 This is a simple script that uses pip and python installed on the system to ease wiping and recreating a venv.
 
@@ -10,7 +12,7 @@ It will install your package with the setup.cfg extras header "test", but others
 
 If anyone besides me uses this and wants it, the default can easily shift to "no extras"
 
-It will:
+##### What it Will Do:
 
 - Clear all `__pycache__` folders in src folder.
 - Make a venv with the provided name/location and python type
