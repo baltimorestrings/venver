@@ -29,6 +29,7 @@ If it doesn't find one matching the version specified, it will call python3 --ve
 once the venv is created with the right version, it doesn't matter what python made it, so this script
 expects the executable to be supplied and will alarm if it doesn't see one:
 
+##### Ex: No Suitable Python Interpreter Found
 ```bash
 new_tests (src_structure %=)> venver 3.10
 Failed. VENVER: OSError encountered:
@@ -41,6 +42,7 @@ Couldn't find a suitable executable for python3.10 to make a venv with
 
 Running without arguments will make a v3.6 venv in a folder called "v6" at repo base:
 
+##### Ex: Running With No Arguments
 ```bash
 pb_python (main *+%=)> venver
 VENVER: Repo root: '/Users/bemore/zcode/me/pb_python'
@@ -51,7 +53,6 @@ VEVNER: running `/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6
 VEVNER: running `/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 -m pip install  /Users/bemore/zcode/me/pb_python[test]``
 ```
 
-----
 
 Note that it installs with pip install `<repo>[test]` - that is the default testing addon we use.
 
@@ -62,6 +63,7 @@ all be created in a folder called "v8"
 
 I am running it deep in the repo, but the script will find the repo source and work off there.
 
+##### Ex: Running At Non-Base Location, Different Phrasing
 ```bash
 some_repo/src/folder> venver python38
 some_repo/src/folder> venver py38
@@ -89,6 +91,7 @@ In this one, I specify I want a venv one folder above the source repo.
 
 You can see I've specified the extra `core_open_source` in my setup.cfg
 
+##### Ex: Specifying custom location
 ```bash
 plugins_official> venver 38 ../venv
 VENVER: Repo root: '/Users/bemore/plugins_official'
