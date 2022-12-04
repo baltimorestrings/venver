@@ -123,8 +123,10 @@ This is a script, not a program. It's written like one and it works like one.
 It is designed to be run directly, or via `curl <raw.github path to venver.py> | python3 - ` in a little wrapper.
 
 It does not aim to wrap or obfuscate or add to the basic setuptools venv capability, there are far too
-many of those already (see: XKDC, protocols). It is just a convenience script that works solely with 
+many of those already (see: below). It is just a convenience script that works solely with 
 pip's capabilities .
+
+<img src="https://imgs.xkcd.com/comics/standards.png" height=50></img>
 
 I'd be happy to add X if anyone ever actually wants, with the single precondition:
 
