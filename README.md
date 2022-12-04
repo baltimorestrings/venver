@@ -24,6 +24,7 @@ If anyone besides me uses this and wants it, the default can easily shift to "no
 
 ### Specifying Python version
 
+##### What Python Executable Will It Use?
 venver will search the environment for the right executable to make the venv with. 
 
 If it doesn't find one matching the version specified, it will call python3 --version and see if that matches.
@@ -89,6 +90,7 @@ All four of those will do the same thing
 
 ### Specifying Venv location
 
+##### How to create venvs not at root
 In this one, I specify I want a venv one folder above the source repo. 
 
 You can see I've specified the extra `core_open_source` in my setup.cfg
