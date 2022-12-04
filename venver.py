@@ -201,16 +201,19 @@ def is_repo_root(path: Path) -> bool:
 
 
 def _get_python_executable(ver: str):
-    sanitized_ver = _sanitize_python_name(ver)
     """Tries its best to get a python executable for a string.
 
     Understands:
         'python38', 'py38', '38', '8', '3', 'py36', etc
     """
+    # first, strip our input down to just the non 3 part, IE python3.8 becomes "8"
+    sanitized_ver = _sanitize_python_name(ver)
 
+    # check if we support this version
     if sanitized_ver not in SUPPORTED_PYTHON_VERSIONS:
         raise ValueError(f"Couldn't get supported python version out of '{ver}'")
 
+    # we'll check the env for python3.#
     py_exec_name = "python3." + sanitized_ver
 
     try_full_name = _run_silent("which " + py_exec_name).strip()
@@ -218,6 +221,7 @@ def _get_python_executable(ver: str):
     if try_full_name:
         return Path(try_full_name)
     else:
+        # if that doesn't work, check if environment python3 matches the ver we want
         try_backup = _run_silent("python3 --version").strip()
         if "3.{sanitized_ver}" in try_backup:
             return Path(try_backup)
