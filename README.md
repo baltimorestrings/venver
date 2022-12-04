@@ -49,11 +49,11 @@ Running without arguments will make a v3.6 venv in a folder called "v6" at repo 
 ```bash
 pb_python (main *+%=)> venver
 VENVER: Repo root: '/Users/bemore/zcode/me/pb_python'
-VENVER: Will be making a venv with '/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6' at 'v6'
+VENVER: Will be making a venv with '/python3.6' at 'v6'
 VENVER: checking and clearing pycaches: done
-VEVNER: running `/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 -m venv v6`
-VEVNER: running `/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 -m pip install --upgrade pip`
-VEVNER: running `/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 -m pip install  /Users/bemore/zcode/me/pb_python[test]``
+VEVNER: running `python3.6 -m venv v6`
+VEVNER: running `python3.6 -m pip install --upgrade pip`
+VEVNER: running `python3.6 -m pip install  /Users/bemore/zcode/me/pb_python[test]``
 ```
 
 

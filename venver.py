@@ -96,7 +96,9 @@ def _venv_build(
         edit_flag (bool): if enabled, pip will install in --edit mode (site-packages gets a .pth file to redirect to the actual source folder)
     """
     venv_create_cmd = f"{py_cmd} -m venv {venv_location}"
+    venv_create_cmd_shortened = venv_create_cmd.replace(str(py_cmd), str(py_cmd.name))
     pip_upgrade_cmd = f"{py_cmd} -m pip install --upgrade pip"
+    pip_upgrade_cmd_shortened = pip_upgrade_cmd.replace(str(py_cmd), str(py_cmd.name))
 
     # build our edit/pip submodule phrasing
     edit_flag = "  --edit  " if edit_flag else ""
@@ -108,14 +110,15 @@ def _venv_build(
     install_package_cmd = (
         f"{py_cmd} -m pip install {edit_flag} {repo_root}{extras_phrase}"
     )
+    install_package_cmd_shortened = install_package_cmd.replace(str(py_cmd), str(py_cmd.name))
 
-    print(f"VEVNER: running `{venv_create_cmd}`")
+    print(f"VEVNER: running `{venv_create_cmd_shortened}`")
     _run_pass_output(venv_create_cmd)
 
-    print(f"VEVNER: running `{pip_upgrade_cmd}`")
+    print(f"VEVNER: running `{pip_upgrade_cmd_shortened}`")
     _run_silent(pip_upgrade_cmd)
 
-    print(f"VEVNER: running `{install_package_cmd}`")
+    print(f"VEVNER: running `{install_package_cmd_shortened}`")
     _run_pass_output(install_package_cmd)
 
 
