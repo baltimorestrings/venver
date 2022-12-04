@@ -124,7 +124,8 @@ It is designed to be run directly, or via `curl <raw.github path to venver.py> |
 
 It does not aim to wrap or obfuscate or add to the basic setuptools venv capability, there are far too
 many of those already (see: below). It is just a convenience script that works solely with 
-pip's capabilities .
+pip's capabilities. I don't know what a poetry is and plan on trying to maintain that, for no particular reason
+at all.
 
 <p align="center" width="100%">
 <img src="https://imgs.xkcd.com/comics/standards.png" height=150 alt="XKDC: Standards"></img>
