@@ -20,6 +20,24 @@ It will:
 
 ### Specifying Python version
 
+venver will search the environment for the right executable to make the venv with. 
+
+If it doesn't find one matching the version specified, it will call python3 --version and see if that matches.
+
+once the venv is created with the right version, it doesn't matter what python made it, so this script
+expects the executable to be supplied and will alarm if it doesn't see one:
+
+```bash
+[C02X61CYJHD3]:new_tests (src_structure %=)> venver 3.10
+Failed. VENVER: OSError encountered:
+Couldn't find a suitable executable for python3.10 to make a venv with
+[C02X61CYJHD3]:new_tests (src_structure %=)> venver 10
+Failed. VENVER: OSError encountered:
+Couldn't find a suitable executable for python3.10 to make a venv with
+```
+
+----
+
 Running without arguments will make a v3.6 venv in a folder called "v6" at repo base:
 
 ```bash
@@ -31,6 +49,8 @@ VEVNER: running `/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6
 VEVNER: running `/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 -m pip install --upgrade pip`
 VEVNER: running `/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 -m pip install  /Users/bemore/zcode/me/pb_python[test]``
 ```
+
+----
 
 Note that it installs with pip install `<repo>[test]` - that is the default testing addon we use.
 
@@ -59,6 +79,8 @@ VEVNER: running `/usr/local/bin/python3.8 -m pip install  /Users/bemore/zcode/me
 ```
 
 All four of those will do the same thing
+
+---
 
 ### Specifying Venv location
 
