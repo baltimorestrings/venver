@@ -113,7 +113,7 @@ def _venv_build(
     _run_pass_output(venv_create_cmd)
 
     print(f"VEVNER: running `{pip_upgrade_cmd}`")
-    _run_pass_output(pip_upgrade_cmd)
+    _run_silent(pip_upgrade_cmd)
 
     print(f"VEVNER: running `{install_package_cmd}`")
     _run_pass_output(install_package_cmd)
