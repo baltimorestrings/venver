@@ -12,6 +12,15 @@ It will install your package with the setup.cfg extras header "test", but others
 
 If anyone besides me uses this and wants it, the default can easily shift to "no extras"
 
+
+##### What it Will Do:
+
+- Clear all `__pycache__` folders in src folder.
+- Make a venv with the provided name/location and python type
+- If not given a type, will default to python3.6
+- If not given a location, will default to v{number} in repo root
+- Install "test" and any other extras it sees in optional "venver" section of setup.cfg
+
 ##### Help Mode
 
 Run with flag `--help` to see help:
@@ -36,19 +45,17 @@ optional arguments:
                     venv will use .pth files in site-packages, and the actual
                     source repo files will be used
 ```
-
-
-##### What it Will Do:
-
-- Clear all `__pycache__` folders in src folder.
-- Make a venv with the provided name/location and python type
-- If not given a type, will default to python3.6
-- If not given a location, will default to v{number} in repo root
-- Install "test" and any other extras it sees in optional "venver" section of setup.cfg
-
 ---
 
 ### Specifying Python version
+
+##### What Python Executable Will It Use?
+venver will search the environment for the right executable to make the venv with. 
+
+If it doesn't find one matching the version specified, it will call python3 --version and see if that matches.
+
+once the venv is created with the right version, it doesn't matter what python made it, so this script
+expects the executable to be supplied and will alarm if it doesn't see one:
 
 ##### Edit Mode
 
@@ -63,13 +70,7 @@ places a .pth file in the site-packages dir to redirect to the folder
 Note that if you make changes to scripts, you'll need to reinstall, and probably  wipe caches if you're doing
 weird manifest/wheel stuff, hence this script.
 
-##### What Python Executable Will It Use?
-venver will search the environment for the right executable to make the venv with. 
-
-If it doesn't find one matching the version specified, it will call python3 --version and see if that matches.
-
-once the venv is created with the right version, it doesn't matter what python made it, so this script
-expects the executable to be supplied and will alarm if it doesn't see one:
+#### Examples 
 
 ##### Ex: No Suitable Python Interpreter Found
 ```bash
