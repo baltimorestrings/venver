@@ -194,6 +194,12 @@ def _sanitize_python_name(ver: str):
     """Turns all versions of python3 names down to just the non 3.
 
     Currently don't support sub-versions because I don't need to, but can be added
+
+    Examples:
+        "python38" -> "8"
+        "py3.9" -> "9"
+        "python2.7" -> "27" (will be rejected by the validator since it starts with 2)
+        "36" -> "6"
     """
     return ver.strip("python").strip("py").strip("3").replace(".", "")
 
