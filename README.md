@@ -24,6 +24,35 @@ If anyone besides me uses this and wants it, the default can easily shift to "no
 
 ### Specifying Python version
 
+##### Edit Mode
+
+pip edit mode is cool. 
+
+Just supply the flag `--edit`, `-e`, or `-E` and the venv built will be in edit mode. 
+
+Run with `--help` to see all the options:
+
+```bash
+[localhost]:~> venver --help
+usage: venver [-h] [--edit]
+                                    [python_version] [venv_destination]
+
+A simple venv utility to rapidly reset repo venvs
+
+positional arguments:
+  python_version    Python version: defaults to 3.6. Can be specified a few
+                    different ways including:py36, 3.6, 6, 8, python311,
+                    py3.8, etc
+  venv_destination  Where to make the venv. If not supplied, will make a venv
+                    in the repo root called v#, where # is the minor version
+                    number (3, 8, 11)
+
+optional arguments:
+  -h, --help        show this help message and exit
+  --edit, -E, -e    If enabled, pip install --edit will be used (the installed
+                    venv will use .pth files in site-packages, and the actual
+                    source repo files will be used
+
 ##### What Python Executable Will It Use?
 venver will search the environment for the right executable to make the venv with. 
 
@@ -34,10 +63,10 @@ expects the executable to be supplied and will alarm if it doesn't see one:
 
 ##### Ex: No Suitable Python Interpreter Found
 ```bash
-new_tests (src_structure %=)> venver 3.10
+[localhost] new_tests (src_structure %=)> venver 3.10
 Failed. VENVER: OSError encountered:
 Couldn't find a suitable executable for python3.10 to make a venv with
-new_tests (src_structure %=)> venver 10
+[localhost] new_tests (src_structure %=)> venver 10
 Failed. VENVER: OSError encountered:
 Couldn't find a suitable executable for python3.10 to make a venv with
 ```
@@ -47,7 +76,7 @@ Running without arguments will make a v3.6 venv in a folder called "v6" at repo 
 
 ##### Ex: Running With No Arguments
 ```bash
-pb_python (main *+%=)> venver
+[localhost] pb_python (main *+%=)> venver
 VENVER: Repo root: '/Users/bemore/zcode/me/pb_python'
 VENVER: Will be making a venv with '/python3.6' at 'v6'
 VENVER: checking and clearing pycaches: done
@@ -68,13 +97,13 @@ I am running it deep in the repo, but the script will find the repo source and w
 
 ##### Ex: Running At Non-Base Location, Different Phrasing
 ```bash
-some_repo/src/folder> venver python38
-some_repo/src/folder> venver py38
-some_repo/src/folder> venver 3.8
-some_repo/src/folder> venver python3.8
+[localhost] some_repo/src/folder> venver python38
+[localhost] some_repo/src/folder> venver py38
+[localhost] some_repo/src/folder> venver 3.8
+[localhost] some_repo/src/folder> venver python3.8
 
 # actual output
-pb_python (main *+%=)> venver py38
+[localhost] pb_python (main *+%=)> venver py38
 VENVER: Repo root: '/Users/bemore/zcode/me/pb_python'
 VENVER: Will be making a venv with '/usr/local/bin/python3.8' at 'v8'
 VENVER: checking and clearing pycaches: ....done
@@ -97,7 +126,7 @@ You can see I've specified the extra `core_open_source` in my setup.cfg
 
 ##### Ex: Specifying custom location
 ```bash
-plugins_official> venver 38 ../venv
+[localhost] plugins_official> venver 38 ../venv
 VENVER: Repo root: '/Users/bemore/plugins_official'
 VENVER: Will be making a venv with '/usr/local/bin/python3.8' at '../venv'
 VENVER: checking and clearing pycaches: done
@@ -109,7 +138,7 @@ VEVNER: running `/usr/local/bin/python3.8 -m pip install  /Users/bemore/plugins_
 this one just wants a different venv name:
 
 ```bash
-plugins_official> venver 3.8 virtual_environment_folder
+[localhost] plugins_official> venver 3.8 virtual_environment_folder
 ```
 
 you get the idea
