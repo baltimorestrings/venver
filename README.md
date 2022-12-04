@@ -24,18 +24,13 @@ If anyone besides me uses this and wants it, the default can easily shift to "no
 
 ### Specifying Python version
 
-##### Edit Mode
+##### Help Mode
 
-pip edit mode is cool. 
-
-Just supply the flag `--edit`, `-e`, or `-E` and the venv built will be in edit mode. 
-
-Run with `--help` to see all the options:
+Run with flag `--help` to see help:
 
 ```bash
 [localhost]:~> venver --help
-usage: venver [-h] [--edit]
-                                    [python_version] [venv_destination]
+usage: venver [-h] [--edit] [python_version] [venv_destination]
 
 A simple venv utility to rapidly reset repo venvs
 
@@ -52,6 +47,20 @@ optional arguments:
   --edit, -E, -e    If enabled, pip install --edit will be used (the installed
                     venv will use .pth files in site-packages, and the actual
                     source repo files will be used
+```
+
+##### Edit Mode
+
+pip edit mode is cool. 
+
+Just supply the flag `--edit`, `-e`, or `-E` and the venv built will be in edit mode. 
+
+You can edit the code in your repo, but running it from the venv will update, since setuptools just
+places a .pth file in the site-packages dir to redirect to the folder
+([More Here] (https://setuptools.pypa.io/en/latest/userguide/development_mode.html))
+
+Note that if you make changes to scripts, you'll need to reinstall, and probably  wipe caches if you're doing
+weird manifest/wheel stuff, hence this script.
 
 ##### What Python Executable Will It Use?
 venver will search the environment for the right executable to make the venv with. 
