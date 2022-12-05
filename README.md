@@ -183,6 +183,4 @@ I'd be happy to add X if anyone ever actually wants, with the single preconditio
 
 **As long as it can be added without interfering with the simple, no-arg functionality**
 
-If it complies, I'm literally always happy to do so. This is mostly up because I'm doing on public git 
-what I do at work, publishing the random things I use so that I can use them, but also practicing my markdown,
-which is why this tiny script is way too explained.
+If it complies, I'm literally always happy to do so. This is mostly up because I'm practicing my markdown, hence simple script being way over-explained
