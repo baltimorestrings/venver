@@ -28,7 +28,7 @@ from subprocess import run, PIPE, STDOUT
 from shutil import rmtree
 from pathlib import Path
 
-REPO_DEFINING_FILENAMES = ["setup.cfg", "pyproject.yaml", ".git"]
+REPO_DEFINING_FILENAMES = ["setup.cfg", "pyproject.toml", ".git"]
 """Files whose presence confirm we're at a repo root. """
 
 SUPPORTED_PYTHON_VERSIONS = ["6", "8", "10", "11"]
