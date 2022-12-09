@@ -28,8 +28,8 @@ from subprocess import run, PIPE, STDOUT
 from shutil import rmtree
 from pathlib import Path
 
-REPO_DEFINING_FILENAMES = ["setup.cfg", "src"]
-"""For now, this only works on src style repos. """
+REPO_DEFINING_FILENAMES = ["setup.cfg", "pyproject.yaml", ".git"]
+"""Files whose presence confirm we're at a repo root. """
 
 SUPPORTED_PYTHON_VERSIONS = ["6", "8", "10", "11"]
 """ I only need these 3"""
