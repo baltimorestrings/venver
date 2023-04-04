@@ -146,9 +146,9 @@ def setup_and_process_args() -> Namespace:
     argparser.add_argument(
         "python_version",
         nargs="?",
-        default="3.6",
+        default="3.8",
         help=(
-            "Python version: defaults to 3.6. Can be specified a few different ways including:"
+            "Python version: defaults to 3.8. Can be specified a few different ways including:"
             "py36, 3.6, 6, 8, python311, py3.8, etc"
         ),
     )
