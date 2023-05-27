@@ -40,7 +40,7 @@ usage: venver [-h] [--edit] [python_version] [venv_destination]
 A simple venv utility to rapidly reset repo venvs
 
 positional arguments:
-  python_version    Python version: defaults to 3.6. Can be specified a few
+  python_version    Python version: defaults to 3.8. Can be specified a few
                     different ways including:py36, 3.6, 6, 8, python311,
                     py3.8, etc
   venv_destination  Where to make the venv. If not supplied, will make a venv
