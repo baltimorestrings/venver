@@ -32,7 +32,7 @@ REPO_DEFINING_FILENAMES = ["setup.cfg", "pyproject.toml", ".git"]
 """Files whose presence confirm we're at a repo root. """
 
 SUPPORTED_PYTHON_VERSIONS = ["6", "8", "10", "11"]
-""" I only need these 3"""
+""" We still support 6 for now"""
 
 DEFAULT_EXTRAS = ["test"]
 """ pip install blah[test] - installs testing requirements """
@@ -55,7 +55,7 @@ def main():
         venv_location = Path(venv_location)
 
         # clear pycaches in reporoot/src
-        _clear_caches(repo_root)
+        _clear_caches_and_build_dir(repo_root)
 
 
         print(f"VENVER: Repo root: '{repo_root}'")
@@ -255,7 +255,7 @@ def _get_python_executable(ver: str) -> Path:
     )
 
 
-def _clear_caches(repo_root: Path):
+def _clear_caches_and_build_dir(repo_root: Path):
     """Just a simple `find $REPO_ROOT/src -name "__pycache__" --type d -delete`, but in python"""
     print("VENVER: checking and clearing pycaches: ", end="")
     caches = list(repo_root.glob("src/**/__pycache__"))
@@ -263,6 +263,10 @@ def _clear_caches(repo_root: Path):
         print(".", end="")
         rmtree(file)
     print("done")
+    build_cache_dir = Path(repo_root, "build")
+    if build_cache_dir.exists() and build_cache_dir.is_dir():
+        print("VENVER: deleting repo_root/build (setuptools wheel caching)")
+        rmtree(str(Path(repo_root, "build")))
 
 def _is_venv_dir(possible_venv_location: Path) -> bool:
     """Accepts Path, returns "yes" if there's a bin/activate and a bin/python in it, IE it's a venv """
