@@ -17,7 +17,7 @@ Things it does:
     1) Recurses up from wherever it is called and finds the repo root
     2) Clears all __pycache__ folders in the actual source - this can be helpful when pip --edit caches get stuck in a few different wheel building situations
     3) Deletes any venv it finds at the provided or default location
-    4) Makes a venv, upgrades pip, installs repo in venv with extra [test]
+    4) Makes a venv at repo base unless a path including "/" is provided, upgrades pip, installs repo in venv with extra [test]
     5) Also installs any other extras it finds by looking in setup.cfg section "venver", key "extras" - expects a comma separated list
 """
 import sys
@@ -51,7 +51,7 @@ def main():
         # generate location for venv if not provided
         venv_location = args.venv_destination
         if not venv_location:
-            venv_location = f"v{_sanitize_python_name(py_cmd.name)}"
+            venv_location = f"{repo_root}/v{_sanitize_python_name(py_cmd.name)}"
         venv_location = Path(venv_location)
 
         # clear pycaches in reporoot/src
@@ -113,13 +113,13 @@ def _venv_build(
         f"{py_in_venv_cmd} -m pip install {edit_flag} {repo_root}{extras_phrase}"
     )
 
-    print(f"VEVNER: running `{venv_create_cmd_shortened}`")
+    print(f"VENVER: running `{venv_create_cmd_shortened}`")
     _run_pass_output(venv_create_cmd)
 
-    print(f"VEVNER: running `{pip_upgrade_cmd}`")
+    print(f"VENVER: running `{pip_upgrade_cmd}`")
     _run_silent(pip_upgrade_cmd)
 
-    print(f"VEVNER: running `{install_package_cmd}`")
+    print(f"VENVER: running `{install_package_cmd}`")
     _run_pass_output(install_package_cmd)
 
 
