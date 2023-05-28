@@ -20,6 +20,7 @@ Things it does:
     4) Makes a venv at repo base unless a path including "/" is provided, upgrades pip, installs repo in venv with extra [test]
     5) Also installs any other extras it finds by looking in setup.cfg section "venver", key "extras" - expects a comma separated list
 """
+import os
 import sys
 from typing import List
 from configparser import ConfigParser
@@ -41,6 +42,9 @@ DEFAULT_EXTRAS = ["test"]
 def main():
     """Script entry point, just calls smaller task functions"""
     args = setup_and_process_args()
+
+    exit_if_in_venv()
+
     try:
         # traverse up folders until we find a repo root
         repo_root: Path = _get_repo_root()
@@ -78,6 +82,10 @@ def main():
 
     except Exception as e:
         _die(f"VENVER: {type(e).__name__} encountered:  \n{e}")
+
+def exit_if_in_venv():
+    if os.environ.get("VIRTUAL_ENV"):
+        _die(f"Please exit virtualenv by running \"deactivate\" before running the venver")
 
 
 def _venv_build(
@@ -326,7 +334,6 @@ class ArgumentParserDisplayHelpOnError(ArgumentParser):
         sys.stderr.write(f"{line}Error: {message}\n{line}")
         self.print_help()
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()
