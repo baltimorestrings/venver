@@ -12,13 +12,23 @@ It will install your package with the setup.cfg extras header "test", but others
 
 If anyone besides me uses this and wants it, the default can easily shift to "no extras"
 
+**This is old. I have since uploaded it to pip, but it is still usable without any pip installs via the following:**
+
 I use it like so:
 
 ```bash
-curl -s https://raw.githubusercontent.com/baltimorestrings/venver/main/venver.py | python3 -
+curl -s https://github.com/baltimorestrings/venver/blob/main/src/baltimorestrings/venver/_venver.py | python3 -
 ```
 
 No need to install, it's just a simple script I find useful and benefit from keeping simple (and not needing to re-pull every time I tweak.
+
+**But if you want to install:**
+
+```bash
+> pip install baltimorestrings.venver
+```
+
+If you pip install, then you can run it via the command `venver
 
 
 #### What it Will Do:
