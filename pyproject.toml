@@ -1,0 +1,39 @@
+##############################################################
+###
+##############################################################
+[build-system]
+requires = [
+  "setuptools",
+  "wheel",
+  "build",
+]
+build-backend = "setuptools.build_meta"
+###########################################################################
+#### Non python packages for CI/CD environments (SD pipelines)
+###
+###   - https://yahoo.github.io/python-screwdrivercd/Install_Dependencies/
+###   - this is for installing stuff like net-snmptools or similar
+###########################################################################
+[tool.sdv4_installdeps]
+fail_on_error = true
+install = ["apk", "apt-get", "brew", "yum"]
+
+[tool.sdv4_installdeps.apk]
+deps = []
+
+[tool.sdv4_installdeps.apt-get]
+deps = []
+
+[tool.sdv4_installdeps.brew]
+deps = []
+
+[tool.sdv4_installdeps.yum]
+deps = []
+
+############################################################################
+### Black
+###   This doesn't affect any of the SD pipelines, those settings are all in .pylintrc and tox.ini
+############################################################################
+[tool.black]
+line-length = 120
+target-version = ['py38', 'py311']
