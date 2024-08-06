@@ -22,12 +22,20 @@ Things it does:
 """
 import os
 import sys
-from typing import List
+from typing import List, Iterable
 from configparser import ConfigParser
 from argparse import ArgumentParser, Namespace
 from subprocess import run, PIPE, STDOUT
 from shutil import rmtree
 from pathlib import Path
+
+has_tomli = False
+
+try:
+    import tomli
+    has_tomli = True
+except ImportError:
+    print("VENVER: warning: running without ability to process venver extras from toml files. install in venv with tomli if that is needed")
 
 REPO_DEFINING_FILENAMES = ["pyproject.toml", ".git"]
 """Files whose presence confirm we're at a repo root. """
@@ -92,7 +100,7 @@ def _venv_build(
     py_cmd: Path,
     venv_location: Path,
     repo_root: Path,
-    pip_extras: List[str],
+    pip_extras: Iterable[str],
     edit_flag: bool,
 ):
     """Actually builds the venv
@@ -101,7 +109,7 @@ def _venv_build(
         py_cmd (Path): full path to a python executable we'll call to create venv
         venv_location (Path): full path to where new venv should go
         repo_root (Path): full path to the repo folder to install from
-        pip_extras (List[str]): array of pip extras to supply to the pip install step (pip install <package>[test,etc])
+        pip_extras (Iterable[str]): array of pip extras to supply to the pip install step (pip install <package>[test,etc])
         edit_flag (bool): if enabled, pip will install in --edit mode (site-packages gets a .pth file to redirect to the actual source folder)
     """
     venv_create_cmd = f"{py_cmd} -m venv {venv_location}"
@@ -301,23 +309,33 @@ def _check_and_clear_existing_venv(venv_location: Path):
             )
 
 
-def _process_setup_cfg(repo_root: Path) -> Path:
+def _process_setup_cfg(repo_root: Path) -> Iterable[str]:
     """Look in repo_root/setup.cfg for a section "venver" with key "extras", returns list
 
     Returns:
-        List[str] representing additional pip "extras" IE pip install <reponame>[extras]
+        Iterable[str] representing additional pip "extras" IE pip install <reponame>[extras]
     """
     extras = []
-    cfg = ConfigParser()
-    with open(str(repo_root / "setup.cfg"), "r") as setup_cfg:
-        cfg.read_file(setup_cfg)
+    if (repo_root / "setup.cfg").exists():
+        cfg = ConfigParser()
+        with open(str(repo_root / "setup.cfg"), "r") as setup_cfg:
+            cfg.read_file(setup_cfg)
+    
+        try:
+            extras += cfg["venver"]["extras"].split(",")
+    
+        except KeyError:
+            # no config specified
+            pass
+    if has_tomli and (repo_root / "pyproject.toml").exists():
+        with open(str(repo_root / "pyproject.toml"), "rb") as pp_toml:
+            data = tomli.load(pp_toml)
+            if "venver" in data and "extras" in data["venver"] and isinstance(data["venver"]["extras"], Iterable):
+                extras += data["venver"]["extras"]
+            elif "venver" in data and "extras" in data["venver"]["extras"]:
+                raise ValueError("pyproject.toml invalid venver extras config detected, must be array")
 
-    try:
-        extras += cfg["venver"]["extras"].split(",")
 
-    except KeyError:
-        # no config specified
-        pass
     return extras
 
 
