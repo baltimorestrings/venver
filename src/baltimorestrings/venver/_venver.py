@@ -259,7 +259,7 @@ def _get_python_executable(ver: str) -> Path:
 
     try_full_name = _run_silent("which " + py_exec_name).strip()
 
-    if try_full_name:
+    if try_full_name and not "no" in try_full_name:
         return Path(try_full_name)
     else:
         # if that doesn't work, check if environment python3 matches the ver we want
